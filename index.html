@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ultimate Cyber-Blaster Dash v6.4 🚀🔥</title>
+<style>
+  body {
+    background: #0d0d0d;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #00f0ff;
+    font-family: 'Courier New', monospace;
+    padding: 20px;
+    min-height: 100vh;
+    box-sizing: border-box;
+  }
+  h2 {
+    text-shadow: 0 0 10px #00f0ff;
+    margin-bottom: 5px;
+    text-align: center;
+  }
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    background: #141414;
+    padding: 25px;
+    border-radius: 20px;
+    border: 2px solid #ff007f;
+    box-shadow: 0 0 20px rgba(255, 0, 127, 0.3), inset 0 0 15px rgba(0, 240, 255, 0.1);
+    max-width: 380px;
+    width: 100%;
+  }
+  .gauge-box {
+    position: relative;
+    display: inline-block;
+    border: 4px solid #00f0ff;
+    border-radius: 50%;
+    padding: 5px;
+    background: #000;
+    box-shadow: 0 0 15px #00f0ff;
+  }
+  canvas {
+    background: #050505;
+    border-radius: 50%;
+  }
+  .odometer-container {
+    position: absolute;
+    top: 205px; 
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    background: #000;
+    border: 2px solid #ff007f;
+    padding: 2px 4px;
+    border-radius: 4px;
+    box-shadow: 0 0 8px #ff007f;
+  }
+  .digit {
+    width: 16px;
+    height: 26px;
+    overflow: hidden;
+    margin: 0 1px;
+    position: relative;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #00f0ff;
+    background: #111;
+    text-align: center;
+  }
+  .digit.tenths {
+    color: #000;
+    background: #ff007f;
+  }
+  .digit span {
+    display: block;
+    position: absolute;
+    width: 100%;
+    line-height: 26px;
+  }
+  .control-panel {
+    width: 100%;
+    text-align: center;
+    border-top: 1px dashed #333;
+    padding-top: 15px;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 15px;
+    font-size: 13px;
+  }
+  .stat-card {
+    background: #080808;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #333;
+  }
+  .stat-card span {
+    display: block;
+    font-weight: bold;
+    font-size: 15px;
+    margin-top: 3px;
+  }
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+  }
+  #burnBtn, #nitroBtn {
+    flex: 1;
+    padding: 12px;
+    color: #fff;
+    font-size: 14px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.2s;
+  }
+  #burnBtn {
+    background: #ff007f;
+    box-shadow: 0 0 15px #ff007f;
+  }
+  #burnBtn.active {
+    background: #00f0ff;
+    color: #000;
+    box-shadow: 0 0 20px #00f0ff;
+  }
+  #nitroBtn {
+    background: #333;
+    color: #555;
+    border: 1px dashed #555;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+  #nitroBtn.available {
+    background: #ffaa00;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 15px #ffaa00;
+  }
+  #nitroBtn.active {
+    background: #ff2200;
+    color: #fff;
+    box-shadow: 0 0 25px #ff2200;
+    animation: pulseNitro 0.3s infinite alternate;
+  }
+  @keyframes pulseNitro {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+  }
+  .badge-card {
+    background: #080808;
+    border: 1px solid #ffaa00;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-size: 12px;
+    color: #ffaa00;
+    box-shadow: inset 0 0 8px rgba(255, 170, 0, 0.2);
+    text-align: left;
+  }
+  .badge-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .badge-card span {
+    display: block;
+    font-weight: bold;
+    font-size: 13px;
+    color: #fff;
+  }
+  .progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: #1a1a1a;
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+    border: 1px solid #333;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffaa00, #ff007f);
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 6px #ffaa00;
+  }
+  .action-row {
+    display: flex;
+    gap: 10px;
+  }
+  .theme-btn, .reset-btn {
+    flex: 1;
+    background: transparent;
+    border: 1px solid #555;
+    color: #aaa;
+    padding: 8px 10px;
+    border-radius: 4px;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+  }
+  .theme-btn:hover, .reset-btn:hover {
+    color: #fff;
+    border-color: #fff;
+  }
+  .reset-btn {
+    border-color: #ff3333;
+    color: #ff5555;
+  }
+  .reset-btn:hover {
+    background: #ff3333;
+    color: #fff;
+  }
+  .ambani-container {
+    margin-top: 15px;
+    text-align: center;
+  }
+  .ambani-img {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #00f0ff;
+    object-fit: cover;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    transition: 0.3s;
+  }
+  .ambani-img:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 15px #ff007f;
+    border-color: #ff007f;
+  }
+  .ambani-quote {
+    font-size: 11px;
+    margin-top: 6px;
+    color: #ff007f;
+    text-shadow: 0 0 5px rgba(255, 0, 127, 0.4);
+    font-weight: bold;
+  }
+</style>
+</head>
+<body>
+
+<h2>CYBER-BLASTER DASH v6.4 🚀🔥</h2>
+<p style="margin-top:0; color:#666; font-size:12px;">Data Blast Engine x CT 100 Core + Pure Real Nitro</p>
+
+<div class="main-container">
+  <!-- Speedo Meter Gauge Frame -->
+  <div class="gauge-box" id="gaugeFrame">
+    <canvas id="speedo" width="300" height="300"></canvas>
+    <div class="odometer-container" id="odometer"></div>
+  </div>
+
+  <!-- Blaster Controls & Stats -->
+  <div class="control-panel">
+    <div class="stats-grid">
+      <div class="stat-card">
+        Live Speed
+        <span id="speedVal" style="color: #00f0ff;">0.00 Mbps</span>
+      </div>
+      <div class="stat-card">
+        Pipes Connected
+        <span id="pipesVal" style="color: #ff007f;">0 / 18</span>
+      </div>
+    </div>
+
+    <!-- Achievement Badge System with Dynamic Progress Bar -->
+    <div class="badge-card">
+      <div class="badge-header">
+        <span>Active Rank / Badge:</span>
+        <span id="rankLevelNum" style="font-size: 11px; color: #00f0ff;">Lv. 1</span>
+      </div>
+      <span id="badgeVal">🌱 Novice Net-Saver</span>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="rankProgressFill"></div>
+      </div>
+      <div style="font-size: 10px; color: #777; margin-top: 4px; text-align: right;" id="rankProgressText">0 MB / 100 MB</div>
+    </div>
+    
+    <div class="btn-row">
+      <button id="burnBtn">START BLAST 🚀</button>
+      <button id="nitroBtn">NITRO ⚡</button>
+    </div>
+    
+    <div class="action-row">
+      <button class="theme-btn" onclick="switchTheme()">Switch Neon Profile 🔄</button>
+      <button class="reset-btn" onclick="resetData()">Reset Data 🗑️</button>
+    </div>
+
+    <!-- Ambani Data Lord Tribute Container with Malayalam Quote -->
+    <div class="ambani-container">
+      <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXKWiwFz3h0EDd_6W1fAQ9mY2cYzEC-VXjIiveukdyu3KipVBm1IOf4KfoJFrD3s---ubKo_CTMWEIO2jTKclNnzZCNYrkFa-CjZU9apE&s=10" alt="Data Lord Ambani" class="ambani-img" title="Data Lord Ambani - Unlimited Blessings 🙏">
+      <div class="ambani-quote">"എന്തട നിനക്ക് നെറ്റ് തീർക്കണോ?" 🤨🔥</div>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas = document.getElementById('speedo');
+const ctx = canvas.getContext('2d');
+const odoContainer = document.getElementById('odometer');
+const burnBtn = document.getElementById('burnBtn');
+const nitroBtn = document.getElementById('nitroBtn');
+
+const centerX = canvas.width / 2;
+const centerY = canvas.height / 2;
+const radius = 135;
+
+// State Variables
+let burning = false;
+let nitroActive = false;
+let totalWasted = parseFloat(localStorage.getItem('cb_total_wasted')) || 0.0;
+let liveSpeed = 0; 
+let displaySpeed = 0;
+let smoothedMbps = 0;
+let spans = [];
+const digitHeight = 26;
+let abortControllers = [];
+
+// Web Audio API for CT 100 Exhaust Sound FX
+let audioCtx = null;
+let oscillator = null;
+let gainNode = null;
+
+function initAudio() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+}
+
+function startEngineSound() {
+  initAudio();
+  if (audioCtx.state === 'suspended') {
+    audioCtx.resume();
+  }
+  if (oscillator) return;
+
+  oscillator = audioCtx.createOscillator();
+  gainNode = audioCtx.createGain();
+
+  oscillator.type = 'sawtooth';
+  oscillator.frequency.setValueAtTime(60, audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(0.05, audioCtx.currentTime);
+
+  oscillator.connect(gainNode);
+  gainNode.connect(audioCtx.destination);
+  oscillator.start();
+}
+
+function updateEngineSound(speed) {
+  if (!oscillator || !audioCtx) return;
+  let targetFreq = 50 + (speed / 120) * 140;
+  if (nitroActive) targetFreq += 25; 
+  oscillator.frequency.setTargetAtTime(targetFreq, audioCtx.currentTime, 0.1);
+}
+
+function stopEngineSound() {
+  if (oscillator) {
+    try {
+      oscillator.stop();
+      oscillator.disconnect();
+    } catch(e) {}
+    oscillator = null;
+    gainNode = null;
+  }
+}
+
+// Cyber Themes Config Engine
+let currentTheme = 0;
+const themes = [
+  { primary: '#00f0ff', secondary: '#ff007f', dialBg: '#050505', needle: '#ffffff' }, 
+  { primary: '#00ff66', secondary: '#ff3333', dialBg: '#000000', needle: '#ff2222' }, 
+  { primary: '#ffaa00', secondary: '#00e5ff', dialBg: '#0a0905', needle: '#ffff00' }   
+];
+
+function applyTheme() {
+  const t = themes[currentTheme];
+  document.body.style.color = t.primary;
+  document.getElementById('gaugeFrame').style.borderColor = t.primary;
+  document.getElementById('gaugeFrame').style.boxShadow = `0 0 15px ${t.primary}`;
+  document.getElementById('odometer').style.borderColor = t.secondary;
+  document.getElementById('odometer').style.boxShadow = `0 0 8px ${t.secondary}`;
+  document.getElementById('speedVal').style.color = t.primary;
+  document.getElementById('pipesVal').style.color = t.secondary;
+  
+  const ambaniImg = document.querySelector('.ambani-img');
+  if (ambaniImg) {
+    ambaniImg.style.borderColor = t.primary;
+    ambaniImg.style.boxShadow = `0 0 10px rgba(${t.primary === '#00f0ff' ? '0, 240, 255' : '255, 170, 0'}, 0.5)`;
+  }
+
+  const ambaniQuote = document.querySelector('.ambani-quote');
+  if (ambaniQuote) {
+    ambaniQuote.style.color = t.secondary;
+    ambaniQuote.style.textShadow = `0 0 5px ${t.secondary}`;
+  }
+
+  if(!burning) {
+    burnBtn.style.background = t.secondary;
+    burnBtn.style.boxShadow = `0 0 15px ${t.secondary}`;
+  } else {
+    burnBtn.style.background = t.primary;
+    burnBtn.style.boxShadow = `0 0 20px ${t.primary}`;
+  }
+}
+
+function switchTheme() {
+  currentTheme = (currentTheme + 1) % themes.length;
+  applyTheme();
+}
+
+function resetData() {
+  if (confirm("Are you sure you want to reset your total wasted data counter?")) {
+    totalWasted = 0.0;
+    localStorage.setItem('cb_total_wasted', '0.0');
+    updateOdometer(totalWasted);
+    updateBadge();
+  }
+}
+
+// Milestone & Achievement Badge Engine with Precise Progress Tracking (in MiB)
+function updateBadge() {
+  const badgeEl = document.getElementById('badgeVal');
+  const levelNumEl = document.getElementById('rankLevelNum');
+  const progressFill = document.getElementById('rankProgressFill');
+  const progressText = document.getElementById('rankProgressText');
+
+  // totalWasted is in GiB. Let's convert to MiB for granular leveling math.
+  let totalMiB = totalWasted * 1024;
+
+  let rankName = "";
+  let levelStr = "Lv. 1";
+  let currentTierMin = 0;
+  let currentTierMax = 100; // 100 MB for first tier
+
+  if (totalMiB >= 10240) { // >= 10 GiB
+    rankName = "👑 Jio Tower Destroyer (Legend)";
+    levelStr = "Lv. Max 🚀";
+    currentTierMin = 10240;
+    currentTierMax = 10240;
+  } else if (totalMiB >= 5120) { // >= 5 GiB
+    rankName = "🔥 Ambani’s Best Friend";
+    levelStr = "Lv. 4";
+    currentTierMin = 5120;
+    currentTierMax = 10240;
+  } else if (totalMiB >= 1024) { // >= 1 GiB
+    rankName = "🚀 CT 100 Speed Demon";
+    levelStr = "Lv. 3";
+    currentTierMin = 1024;
+    currentTierMax = 5120;
+  } else if (totalMiB >= 100) { // >= 100 MB
+    rankName = "⚡ Data Burner Rookie";
+    levelStr = "Lv. 2";
+    currentTierMin = 100;
+    currentTierMax = 1024;
+  } else {
+    rankName = "🌱 Novice Net-Saver";
+    levelStr = "Lv. 1";
+    currentTierMin = 0;
+    currentTierMax = 100;
+  }
+
+  badgeEl.innerText = rankName;
+  levelNumEl.innerText = levelStr;
+
+  // Calculate Progress Percentage for current tier
+  let percent = 100;
+  if (currentTierMax > currentTierMin) {
+    let progressInTier = totalMiB - currentTierMin;
+    let tierSpan = currentTierMax - currentTierMin;
+    percent = Math.min(Math.max((progressInTier / tierSpan) * 100, 0), 100);
+  }
+
+  progressFill.style.width = `${percent}%`;
+
+  if (currentTierMax === 10240 && totalMiB >= 10240) {
+    progressText.innerText = `${(totalWasted).toFixed(2)} GiB / MAX REACHED 🔥`;
+  } else if (currentTierMax >= 1024) {
+    progressText.innerText = `${(totalWasted).toFixed(2)} GiB / ${(currentTierMax / 1024).toFixed(1)} GiB`;
+  } else {
+    progressText.innerText = `${totalMiB.toFixed(1)} MB / ${currentTierMax} MB`;
+  }
+
+  if (totalWasted >= 0.05 && !nitroBtn.classList.contains('available')) {
+    nitroBtn.classList.add('available');
+    if (!nitroActive) nitroBtn.innerText = "NITRO ⚡";
+  }
+}
+
+// Build Cascade Odometer Elements
+function createOdometer(container) {
+  container.innerHTML = '';
+  spans = [];
+  for (let i = 0; i < 6; i++) {
+    const digit = document.createElement('div');
+    digit.className = (i === 5) ? 'digit tenths' : 'digit';
+    if(i === 5) digit.style.background = themes[currentTheme].secondary;
+    
+    const span = document.createElement('span');
+    let nums = '';
+    for(let j = 0; j <= 10; j++) nums += (j % 10) + '<br>';
+    span.innerHTML = nums;
+    span.style.top = '0px';
+    
+    digit.appendChild(span);
+    container.appendChild(digit);
+    spans.push(span);
+  }
+}
+
+function updateOdometer(val) {
+  let tenths = val * 10;
+  let floorTenths = Math.floor(tenths);
+  
+  let d5 = floorTenths % 10;
+  let d4 = Math.floor(floorTenths / 10) % 10;
+  let d3 = Math.floor(floorTenths / 100) % 10;
+  let d2 = Math.floor(floorTenths / 1000) % 10;
+  let d1 = Math.floor(floorTenths / 10000) % 10;
+  let d0 = Math.floor(floorTenths / 100000) % 10;
+  
+  let currentDigits = [d0, d1, d2, d3, d4, d5];
+  let fraction = tenths - floorTenths;
+  
+  let rollProgress = new Array(6).fill(0);
+  rollProgress[5] = fraction;
+  
+  if (currentDigits[5] === 9) rollProgress[4] = fraction;
+  if (currentDigits[5] === 9 && currentDigits[4] === 9) rollProgress[3] = fraction;
+  if (currentDigits[5] === 9 && currentDigits[4] === 9 && currentDigits[3] === 9) rollProgress[2] = fraction;
+  if (currentDigits[5] === 9 && currentDigits[4] === 9 && currentDigits[3] === 9 && currentDigits[2] === 9) rollProgress[1] = fraction;
+  if (currentDigits[5] === 9 && currentDigits[4] === 9 && currentDigits[3] === 9 && currentDigits[2] === 9 && currentDigits[1] === 9) rollProgress[0] = fraction;
+
+  for (let i = 0; i < spans.length; i++) {
+    let finalOffset = -(currentDigits[i] + rollProgress[i]) * digitHeight;
+    spans[i].style.top = `${finalOffset}px`;
+  }
+}
+
+// Render Core Visual Canvas (Strictly capped at max 120)
+function drawSpeedometer() {
+    const theme = themes[currentTheme];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = theme.dialBg;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, Math.PI*2);
+    ctx.fill();
+
+    // Ticks Layout (0 to 120 scale)
+    for(let i = 0; i <= 120; i += 5){
+      let angle = Math.PI * 0.85 + (i / 120) * (Math.PI * 1.3);
+      let isMajor = (i % 20 === 0);
+      let isMedium = (i % 10 === 0 && !isMajor);
+      let tickLength = isMajor ? 14 : (isMedium ? 10 : 6);
+      
+      let x1 = centerX + Math.cos(angle) * (radius - tickLength);
+      let y1 = centerY + Math.sin(angle) * (radius - tickLength);
+      let x2 = centerX + Math.cos(angle) * radius;
+      let y2 = centerY + Math.sin(angle) * radius;
+      
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.lineWidth = isMajor ? 3 : 1.5;
+      ctx.strokeStyle = isMajor ? theme.primary : theme.secondary;
+      ctx.stroke();
+
+      if(isMajor){
+        let tx = centerX + Math.cos(angle) * (radius - 26);
+        let ty = centerY + Math.sin(angle) * (radius - 26) + 4;
+        ctx.font = "bold 12px 'Courier New'";
+        ctx.fillStyle = theme.primary;
+        ctx.textAlign = "center";
+        ctx.fillText(i, tx, ty);
+      }
+    }
+
+    // Smooth Needle Dampening (Strictly limited to 120)
+    displaySpeed += (liveSpeed - displaySpeed) * 0.05;
+    let needleAngle = Math.PI * 0.85 + (Math.min(displaySpeed, 120) / 120) * (Math.PI * 1.3);
+    
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + Math.cos(needleAngle) * (radius - 22),
+               centerY + Math.sin(needleAngle) * (radius - 22));
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = nitroActive ? '#ff2200' : theme.needle;
+    ctx.stroke();
+
+    // Core Cap
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 8, 0, Math.PI*2);
+    ctx.fillStyle = nitroActive ? '#ff2200' : theme.primary;
+    ctx.fill();
+
+    requestAnimationFrame(drawSpeedometer);
+}
+
+// Heavy Load Fetch Pipes Engine (Pure real downloaded data only)
+const chunkSizeMiB = 102400 / (1024 * 1024);
+const targetUrl = 'https://speed.cloudflare.com/__down?bytes=102400';
+let activeThreads = 0;
+let bytesDownloadedInInterval = 0;
+
+async function firePipe() {
+  if (!burning) return;
+  activeThreads++;
+  let maxPipes = nitroActive ? 24 : 18;
+  document.getElementById('pipesVal').innerText = `${activeThreads} / ${maxPipes}`;
+  
+  const controller = new AbortController();
+  abortControllers.push(controller);
+  
+  try {
+    const response = await fetch(`${targetUrl}&nocache=${Math.random()}`, { signal: controller.signal });
+    if (response.ok && burning) {
+      await response.blob();
+      totalWasted += chunkSizeMiB;
+      bytesDownloadedInInterval += chunkSizeMiB;
+      localStorage.setItem('cb_total_wasted', totalWasted.toFixed(4));
+      updateOdometer(totalWasted);
+      updateBadge(); // Ranks and progress bar update smoothly in real-time!
+    }
+  } catch (e) {} finally {
+    activeThreads--;
+    document.getElementById('pipesVal').innerText = `${activeThreads} / ${nitroActive ? 24 : 18}`;
+    abortControllers = abortControllers.filter(c => c !== controller);
+    if (burning) firePipe();
+  }
+}
+
+// Constant Speed Control via EMA (Real speed calculation strictly capped at 120)
+setInterval(() => {
+  if (burning) {
+    let speedMiBs = bytesDownloadedInInterval / 0.3;
+    bytesDownloadedInInterval = 0;
+    let rawMbps = speedMiBs * 8; 
+    
+    if (nitroActive) rawMbps *= 1.15; 
+    
+    if (smoothedMbps === 0) {
+      smoothedMbps = rawMbps;
+    } else {
+      smoothedMbps = (smoothedMbps * 0.7) + (rawMbps * 0.3);
+    }
+
+    document.getElementById('speedVal').innerText = `${Math.min(smoothedMbps, 120).toFixed(2)} Mbps`;
+    liveSpeed = Math.min(smoothedMbps, 120); 
+    updateEngineSound(liveSpeed);
+  } else {
+    smoothedMbps = 0;
+    liveSpeed = 0;
+    document.getElementById('speedVal').innerText = `0.00 Mbps`;
+    stopEngineSound();
+  }
+}, 300);
+
+burnBtn.addEventListener('click', function() {
+  if (!burning) {
+    burning = true;
+    this.innerText = "STOP BLAST 🛑";
+    this.classList.add('active');
+    applyTheme();
+    startEngineSound();
+    let threadCount = nitroActive ? 24 : 18;
+    for (let i = 0; i < threadCount; i++) {
+      setTimeout(firePipe, i * 20);
+    }
+  } else {
+    burning = false;
+    nitroActive = false;
+    nitroBtn.classList.remove('active');
+    this.innerText = "START BLAST 🚀";
+    this.classList.remove('active');
+    applyTheme();
+    stopEngineSound();
+    abortControllers.forEach(c => c.abort());
+    abortControllers = [];
+    document.getElementById('pipesVal').innerText = `0 / 18`;
+  }
+});
+
+nitroBtn.addEventListener('click', function() {
+  if (!this.classList.contains('available') && !nitroActive) return;
+  nitroActive = !nitroActive;
+  if (nitroActive) {
+    this.classList.add('active');
+    this.innerText = "NITRO ON 🔥";
+    if (burning) {
+      for (let i = 0; i < 6; i++) {
+        setTimeout(firePipe, i * 15);
+      }
+    }
+  } else {
+    this.classList.remove('active');
+    this.innerText = "NITRO ⚡";
+  }
+});
+
+// Initialization
+createOdometer(odoContainer);
+updateOdometer(totalWasted);
+updateBadge();
+applyTheme();
+drawSpeedometer();
+</script>
+</body>
+</html>
