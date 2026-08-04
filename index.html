@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Ultimate Cyber-Blaster Dash v7.0 🚀🔥</title>
+<title>Cyber-Blaster Dash v25.0 - Custom Layout Edition 🚀🎸</title>
 <style>
   body {
     background: #0d0d0d;
@@ -15,6 +15,10 @@
     padding: 20px;
     min-height: 100vh;
     box-sizing: border-box;
+    transition: background 0.1s ease;
+  }
+  body.lightning-flash {
+    background: #1a0033 !important;
   }
   h2 {
     text-shadow: 0 0 10px #00f0ff;
@@ -34,6 +38,1213 @@
     max-width: 400px;
     width: 100%;
     position: relative;
+    overflow: hidden;
+  }
+  .gauge-box {
+    position: relative;
+    display: inline-block;
+    border: 4px solid #00f0ff;
+    border-radius: 50%;
+    padding: 5px;
+    background: #000;
+    box-shadow: 0 0 15px #00f0ff;
+    transition: 0.3s;
+  }
+  .gauge-box.overheat {
+    border-color: #ff0000;
+    box-shadow: 0 0 30px #ff0000;
+    animation: overheatBlink 0.4s infinite alternate;
+  }
+  @keyframes overheatBlink {
+    0% { box-shadow: 0 0 15px #ff0000; }
+    100% { box-shadow: 0 0 35px #ff0000, inset 0 0 15px #ff0000; }
+  }
+  canvas {
+    background: #050505;
+    border-radius: 50%;
+  }
+  .odometer-container {
+    position: absolute;
+    top: 205px; 
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    background: #000;
+    border: 2px solid #ff007f;
+    padding: 2px 4px;
+    border-radius: 4px;
+    box-shadow: 0 0 8px #ff007f;
+  }
+  .digit {
+    width: 16px;
+    height: 26px;
+    overflow: hidden;
+    margin: 0 1px;
+    position: relative;
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #00f0ff;
+    background: #111;
+    text-align: center;
+  }
+  .digit.tenths {
+    color: #000;
+    background: #ff007f;
+  }
+  .digit span {
+    display: block;
+    position: absolute;
+    width: 100%;
+    line-height: 26px;
+  }
+  .control-panel {
+    width: 100%;
+    text-align: center;
+  }
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 12px;
+    font-size: 12px;
+  }
+  .stat-card {
+    background: #080808;
+    padding: 8px;
+    border-radius: 6px;
+    border: 1px solid #333;
+  }
+  .stat-card span {
+    display: block;
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 3px;
+  }
+
+  .target-travel-box {
+    background: #080808;
+    border: 1px solid #00f0ff;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    text-align: left;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .target-travel-box label {
+    display: block;
+    font-size: 11px;
+    color: #00f0ff;
+    font-weight: bold;
+    margin-bottom: 6px;
+  }
+  .target-input-row {
+    display: flex;
+    gap: 6px;
+  }
+  .target-travel-box input {
+    flex: 1;
+    background: #000;
+    border: 1px solid #555;
+    color: #fff;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    outline: none;
+  }
+  .target-travel-box input:focus {
+    border-color: #00f0ff;
+    box-shadow: 0 0 5px rgba(0,240,255,0.4);
+  }
+  .set-target-btn {
+    background: #00f0ff;
+    color: #000;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 11px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+  }
+  .set-target-btn:hover { background: #fff; }
+
+  .mode-5g-container {
+    background: #080808;
+    border: 1px solid #ff007f;
+    border-radius: 8px;
+    padding: 8px 10px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .mode-5g-label {
+    font-size: 12px;
+    font-weight: bold;
+    color: #ff007f;
+    text-shadow: 0 0 5px #ff007f;
+  }
+  .toggle-5g-btn {
+    background: #111;
+    border: 1px solid #ff007f;
+    color: #ff007f;
+    padding: 5px 12px;
+    font-size: 11px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    transition: 0.3s;
+  }
+  .toggle-5g-btn.active {
+    background: #ff007f;
+    color: #fff;
+    box-shadow: 0 0 12px #ff007f;
+  }
+
+  .gear-container {
+    background: #080808;
+    border: 1px solid #00f0ff;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .gear-display {
+    font-size: 16px;
+    font-weight: bold;
+    color: #ffaa00;
+    text-shadow: 0 0 5px #ffaa00;
+  }
+  .gear-btns {
+    display: flex;
+    gap: 5px;
+  }
+  .gear-btn {
+    background: #111;
+    border: 1px solid #00f0ff;
+    color: #00f0ff;
+    padding: 4px 10px;
+    font-size: 11px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .gear-btn:hover { background: #00f0ff; color: #000; }
+
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  #burnBtn, #nitroBtn {
+    flex: 1;
+    padding: 12px;
+    color: #fff;
+    font-size: 14px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: 0.2s;
+  }
+  #burnBtn {
+    background: #ff007f;
+    box-shadow: 0 0 15px #ff007f;
+  }
+  #burnBtn.active {
+    background: #00f0ff;
+    color: #000;
+    box-shadow: 0 0 20px #00f0ff;
+  }
+  #nitroBtn {
+    background: #333;
+    color: #555;
+    border: 1px dashed #555;
+    cursor: not-allowed;
+  }
+  #nitroBtn.available {
+    background: #ffaa00;
+    color: #000;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 0 15px #ffaa00;
+  }
+  #nitroBtn.active {
+    background: #ff2200;
+    color: #fff;
+    box-shadow: 0 0 25px #ff2200;
+    animation: pulseNitro 0.3s infinite alternate;
+  }
+
+  .badge-card {
+    background: #080808;
+    border: 1px solid #ffaa00;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    font-size: 12px;
+    color: #ffaa00;
+    box-shadow: inset 0 0 8px rgba(255, 170, 0, 0.2);
+    text-align: left;
+  }
+  .badge-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .badge-card span {
+    display: block;
+    font-weight: bold;
+    font-size: 13px;
+    color: #fff;
+  }
+  .progress-bar-bg {
+    width: 100%;
+    height: 6px;
+    background: #1a1a1a;
+    border-radius: 3px;
+    margin-top: 8px;
+    overflow: hidden;
+    border: 1px solid #333;
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #ffaa00, #ff007f);
+    width: 0%;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 6px #ffaa00;
+  }
+  .action-row {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+  .theme-btn, .reset-btn, .radio-btn, .next-bgm-btn, .upload-btn-label {
+    flex: 1;
+    background: transparent;
+    border: 1px solid #555;
+    color: #aaa;
+    padding: 8px 4px;
+    border-radius: 4px;
+    font-size: 10px;
+    cursor: pointer;
+    font-family: 'Courier New', monospace;
+    text-align: center;
+  }
+  .theme-btn:hover, .reset-btn:hover, .radio-btn:hover, .next-bgm-btn:hover, .upload-btn-label:hover { color: #fff; border-color: #fff; }
+  .reset-btn { border-color: #ff3333; color: #ff5555; }
+  .reset-btn:hover { background: #ff3333; color: #fff; }
+  .radio-btn.active { border-color: #00f0ff; color: #00f0ff; box-shadow: 0 0 8px #00f0ff; }
+  .next-bgm-btn { border-color: #ffaa00; color: #ffaa00; }
+  .upload-btn-label { border-color: #00ff66; color: #00ff66; }
+
+  .track-display {
+    font-size: 11px;
+    color: #ffaa00;
+    margin-bottom: 8px;
+    text-shadow: 0 0 5px #ffaa00;
+    font-weight: bold;
+  }
+
+  .yt-player-box {
+    background: #080808;
+    border: 1px solid #ff007f;
+    border-radius: 8px;
+    padding: 8px;
+    margin-bottom: 12px;
+    text-align: center;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .yt-controls-row {
+    display: flex;
+    gap: 5px;
+    margin-top: 5px;
+  }
+  .yt-action-btn {
+    flex: 1;
+    border: none;
+    padding: 5px;
+    border-radius: 4px;
+    font-size: 10px;
+    cursor: pointer;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+  }
+  .yt-iframe-wrap {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    height: 0;
+    overflow: hidden;
+    border-radius: 6px;
+    margin-top: 5px;
+  }
+  .yt-iframe-wrap iframe {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    border: none;
+  }
+
+  .ambani-container {
+    margin-top: 0;
+    margin-bottom: 4px;
+    text-align: center;
+    position: relative;
+    width: 100%;
+  }
+  .ambani-title {
+    font-size: 13px;
+    font-weight: bold;
+    color: #ff007f;
+    margin-bottom: 6px;
+    text-shadow: 0 0 8px rgba(255, 0, 127, 0.6);
+  }
+  .ambani-img-wrapper {
+    position: relative;
+    display: inline-block;
+  }
+  .ambani-img {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    border: 2px solid #00f0ff;
+    object-fit: cover;
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    transition: 0.3s;
+  }
+  .ambani-img.rage {
+    border-color: #ff0000;
+    box-shadow: 0 0 25px #ff0000;
+    animation: rageShake 0.1s infinite;
+  }
+  @keyframes rageShake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    50% { transform: translate(-1px, -1px) rotate(1deg); }
+    100% { transform: translate(1px, -1px) rotate(-1deg); }
+  }
+  .ambani-quote {
+    font-size: 11px;
+    margin-top: 6px;
+    color: #ff007f;
+    text-shadow: 0 0 5px rgba(255, 0, 127, 0.4);
+    font-weight: bold;
+    min-height: 28px;
+  }
+  
+  .history-card {
+    background: #080808;
+    border: 1px solid #333;
+    padding: 8px;
+    border-radius: 6px;
+    font-size: 11px;
+    text-align: left;
+    margin-bottom: 10px;
+  }
+  .history-card div { display: flex; justify-content: space-between; margin: 3px 0; }
+
+  #policeAlert {
+    display: none;
+    position: absolute;
+    top: 10px;
+    left: 10px; right: 10px;
+    background: rgba(255, 0, 0, 0.9);
+    border: 2px solid #00f0ff;
+    color: #fff;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: bold;
+    z-index: 100;
+    animation: policeFlash 0.3s infinite alternate;
+  }
+  @keyframes policeFlash {
+    0% { background: rgba(255, 0, 0, 0.95); box-shadow: 0 0 15px #ff0000; }
+    100% { background: rgba(0, 100, 255, 0.95); box-shadow: 0 0 15px #00f0ff; }
+  }
+
+  #overheatBanner {
+    display: none;
+    background: #ff0000;
+    color: #fff;
+    font-weight: bold;
+    font-size: 10px;
+    padding: 2px 0;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    animation: pulseOverheat 0.5s infinite alternate;
+  }
+</style>
+</head>
+<body>
+
+<h2>CYBER-BLASTER DASH v25.0 🚀🚗</h2>
+<p style="margin-top:0; color:#666; font-size:11px;" id="editionText">Custom Top-Down Ordered Edition</p>
+
+<div class="main-container">
+  <div id="policeAlert">🚨 POLICE ALERT: AMBANI CYBER CELL IS TRACKING YOUR HIGH DATA BLAST IP! 🚨</div>
+  <div id="overheatBanner">⚠️ SYSTEM OVERHEAT WARNING! REDLINE SPEED! ⚠️</div>
+
+  <!-- 1. AMBANI TITLE, PHOTO & DIALOGUE AT THE TOP -->
+  <div class="ambani-container">
+    <div class="ambani-title">ഞാൻ ഒരു മലരൻ 🌸😂</div>
+    <div class="ambani-img-wrapper">
+      <img id="ambaniImg" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTXKWiwFz3h0EDd_6W1fAQ9mY2cYzEC-VXjIiveukdyu3KipVBm1IOf4KfoJFrD3s---ubKo_CTMWEIO2jTKclNnzZCNYrkFa-CjZU9apE&s=10" alt="Ambani" class="ambani-img">
+    </div>
+    <div class="ambani-quote" id="ambaniQuote">"എന്തട നിനക്ക് നെറ്റ് തീർക്കണോ?" 🤨🔥</div>
+  </div>
+
+  <!-- 2. YOUTUBE SONGS -->
+  <div class="yt-player-box">
+    <div style="font-size: 11px; color: #ff007f; font-weight: bold; margin-bottom: 4px;" id="ytSongTitle">
+      🎵 Raga of Revenge
+    </div>
+    <div class="yt-controls-row">
+      <button onclick="toggleYtPlayer()" id="ytToggleBtn" class="yt-action-btn" style="background:#ff007f; color:#fff;">Play YouTube 🎵</button>
+      <button onclick="nextYtSong()" class="yt-action-btn" style="background:#ffaa00; color:#000;">Next Song ⏭️</button>
+    </div>
+    <div class="yt-iframe-wrap" id="ytWrap" style="display:none;">
+      <iframe id="ytIframe" src="" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    </div>
+  </div>
+
+  <!-- 3. ULTRA 5G MODE OPTION -->
+  <div class="mode-5g-container">
+    <div class="mode-5g-label">⚡ ULTRA 5G MODE</div>
+    <button class="toggle-5g-btn" id="btn5G" onclick="toggle5GMode()">5G: OFF</button>
+  </div>
+
+  <!-- 4. HOW MANY KMS (TARGET TRAVEL) -->
+  <div class="target-travel-box">
+    <label for="mbTargetInput">നിനക്ക് എത്ര ദൂരം യാത്ര ചെയ്യണം മച്ചാനെ 🏍️</label>
+    <div class="target-input-row">
+      <input type="number" id="mbTargetInput" step="any" placeholder="e.g. 10 or 0 for unlimited">
+      <button class="set-target-btn" onclick="setCustomTarget()">SET KMS</button>
+    </div>
+    <div id="targetStatusText" style="font-size: 10px; color: #ffaa00; margin-top: 5px;">Target: Unlimited Run 🚀</div>
+  </div>
+
+  <!-- 5. SPEEDOMETER -->
+  <div class="gauge-box" id="gaugeFrame">
+    <canvas id="speedo" width="300" height="300"></canvas>
+    <div class="odometer-container" id="odometer"></div>
+  </div>
+
+  <!-- 6. CONTROL PANEL & OTHER CONTROLS -->
+  <div class="control-panel">
+    <div class="stats-grid">
+      <div class="stat-card">
+        Live Speed
+        <span id="speedVal" style="color: #00f0ff;">0.00 KBps</span>
+      </div>
+      <div class="stat-card">
+        Pipes Connected
+        <span id="pipesVal" style="color: #ff007f;">0 / 24</span>
+      </div>
+    </div>
+
+    <div class="gear-container">
+      <div class="gear-display" id="gearNum">GEAR: 1</div>
+      <div class="gear-btns">
+        <button class="gear-btn" onclick="changeGear(-1)">GEAR -</button>
+        <button class="gear-btn" onclick="changeGear(1)">GEAR +</button>
+      </div>
+    </div>
+
+    <div class="badge-card">
+      <div class="badge-header">
+        <span>Active Rank:</span>
+        <span id="rankLevelNum" style="font-size: 11px; color: #00f0ff;">Lv. 1</span>
+      </div>
+      <span id="badgeVal">🌱 Novice Net-Saver</span>
+      <div class="progress-bar-bg">
+        <div class="progress-bar-fill" id="rankProgressFill"></div>
+      </div>
+      <div style="font-size: 10px; color: #777; margin-top: 4px; text-align: right;" id="rankProgressText">0 MiB / 100 MiB</div>
+    </div>
+    
+    <div class="btn-row">
+      <button id="burnBtn">START BLAST 🚀</button>
+      <button id="nitroBtn">NITRO ⚡</button>
+    </div>
+    
+    <div class="action-row">
+      <button class="theme-btn" onclick="switchTheme()">Theme 🔄</button>
+      <button class="radio-btn" id="radioBtn" onclick="toggleRadio()">Radio 📻</button>
+      <button class="next-bgm-btn" onclick="nextRadioTrack()">Next ⏭️</button>
+      <label class="upload-btn-label">
+        Song 📁
+        <input type="file" id="audioFileInput" accept="audio/*" style="display:none;" onchange="handleCustomAudio(event)">
+      </label>
+      <button class="reset-btn" onclick="resetData()">Reset 🗑️</button>
+    </div>
+
+    <div class="track-display" id="trackNameDisplay">📻 Radio Station Offline</div>
+
+    <div class="history-card">
+      <div style="color: #ffaa00; font-weight: bold; border-bottom: 1px dashed #333; padding-bottom: 3px; margin-bottom: 5px;">
+        <span>🏆 LOG RECORDS</span>
+      </div>
+      <div><span>Current Travelling:</span> <strong id="currentSessionVal" style="color:#00ff66;">0.0 MiB</strong></div>
+      <div><span>Max Speed 4G (KBps):</span> <strong id="maxSpeedVal4G" style="color:#00f0ff;">0.00 KBps</strong></div>
+      <div><span>Max Speed 5G (MB/s):</span> <strong id="maxSpeedVal5G" style="color:#ff007f;">0.00 MB/s</strong></div>
+      <div><span>Peak Session Waste:</span> <strong id="peakSessionVal" style="color:#ffaa00;">0.0 MiB</strong></div>
+    </div>
+  </div>
+</div>
+
+<audio id="realBgmPlayer" crossorigin="anonymous" loop></audio>
+
+<script>
+const canvas = document.getElementById('speedo');
+const ctx = canvas.getContext('2d');
+const odoContainer = document.getElementById('odometer');
+const burnBtn = document.getElementById('burnBtn');
+const nitroBtn = document.getElementById('nitroBtn');
+const ambaniImg = document.getElementById('ambaniImg');
+const ambaniQuote = document.getElementById('ambaniQuote');
+const overheatBanner = document.getElementById('overheatBanner');
+const policeAlert = document.getElementById('policeAlert');
+const gaugeFrame = document.getElementById('gaugeFrame');
+const radioBtn = document.getElementById('radioBtn');
+const trackNameDisplay = document.getElementById('trackNameDisplay');
+const realAudio = document.getElementById('realBgmPlayer');
+
+const centerX = canvas.width / 2;
+const centerY = canvas.height / 2;
+const radius = 135;
+
+let totalWasted = parseFloat(localStorage.getItem('cb_total_wasted')) || 0.0;
+let maxSpeed4G = parseFloat(localStorage.getItem('cb_max_speed_4g')) || parseFloat(localStorage.getItem('cb_max_speed')) || 0.0;
+let maxSpeed5G = parseFloat(localStorage.getItem('cb_max_speed_5g')) || 0.0;
+let peakSession = parseFloat(localStorage.getItem('cb_peak_session')) || 0.0;
+
+let currentSessionWasted = 0;
+let targetMbLimit = null; 
+let burning = false;
+let nitroActive = false;
+let is5GMode = false;
+let currentGear = 1;
+let liveSpeed = 0; 
+let displaySpeed = 0;
+let smoothedKBps = 0;
+let spans = [];
+const digitHeight = 26;
+let abortControllers = [];
+
+function toggle5GMode() {
+  is5GMode = !is5GMode;
+  const btn = document.getElementById('btn5G');
+  const edText = document.getElementById('editionText');
+  
+  if (is5GMode) {
+    btn.innerText = "5G: ON 🔥";
+    btn.classList.add('active');
+    edText.innerText = "Ultra 5G Mode";
+    triggerMalayalamSpeech("അൾട്രാ ഫൈവ് ജി മോഡ് ആക്റ്റീവ് ആക്കിയിരിക്കുന്നു!");
+  } else {
+    btn.innerText = "5G: OFF";
+    btn.classList.remove('active');
+    edText.innerText = "6000 KBps Normal Mode";
+    triggerMalayalamSpeech("ഫൈവ് ജി മോഡ് ഡിസാക്റ്റീവ് ആക്കി!");
+  }
+  updateHistoryUI();
+}
+
+function setCustomTarget() {
+  const rawVal = document.getElementById('mbTargetInput').value.trim();
+  const statusEl = document.getElementById('targetStatusText');
+  
+  if (rawVal === "" || parseFloat(rawVal) <= 0) {
+    targetMbLimit = null;
+    statusEl.innerText = `Target: Unlimited Run 🚀`;
+    triggerMalayalamSpeech("അൺലിമിറ്റഡ് റൈഡ് മോഡ് ആക്റ്റീവ് ആക്കിയിരിക്കുന്നു!");
+  } else {
+    const val = parseFloat(rawVal);
+    if (!isNaN(val)) {
+      targetMbLimit = val;
+      statusEl.innerText = `Target Set: ${val} MB (= ${val} kms) ✈️`;
+      triggerMalayalamSpeech(`ടാർഗെറ്റ് സെറ്റ് ചെയ്തിരിക്കുന്നു, കൃത്യം ${val} കിലോമീറ്റർ യാത്ര ചെയ്യാം!`);
+    }
+  }
+}
+
+const ytSongs = [
+  { name: "🎵 Raga of Revenge", id: "wiCL4_hhyzA" },
+  { name: "🎵 Paaraake (Kilometers & Kilometers)", id: "a2fu1Mt3U3w" }
+];
+let currentYtIndex = 0; 
+let ytPlaying = false;
+
+function toggleYtPlayer() {
+  ytPlaying = !ytPlaying;
+  const wrap = document.getElementById('ytWrap');
+  const iframe = document.getElementById('ytIframe');
+  const btn = document.getElementById('ytToggleBtn');
+  const songTitleEl = document.getElementById('ytSongTitle');
+  
+  if (ytPlaying) {
+    wrap.style.display = 'block';
+    iframe.src = `https://www.youtube.com/embed/${ytSongs[currentYtIndex].id}?autoplay=1`;
+    songTitleEl.innerText = ytSongs[currentYtIndex].name;
+    btn.innerText = "Stop YouTube 🛑";
+    btn.style.background = "#00f0ff";
+    btn.style.color = "#000";
+  } else {
+    wrap.style.display = 'none';
+    iframe.src = "";
+    btn.innerText = "Play YouTube 🎵";
+    btn.style.background = "#ff007f";
+    btn.style.color = "#fff";
+  }
+}
+
+function nextYtSong() {
+  currentYtIndex = (currentYtIndex + 1) % ytSongs.length;
+  const songTitleEl = document.getElementById('ytSongTitle');
+  songTitleEl.innerText = ytSongs[currentYtIndex].name;
+  
+  if (ytPlaying) {
+    const iframe = document.getElementById('ytIframe');
+    iframe.src = `https://www.youtube.com/embed/${ytSongs[currentYtIndex].id}?autoplay=1`;
+  }
+}
+
+const radioStreams = [
+  { name: "📻 Club FM 94.3 Live", url: "https://stream.zeno.fm/0r0xa792kwzuv" },
+  { name: "📻 Pravasi Bharathi 810 AM", url: "https://stream.zeno.fm/f3wvbbqmdg8uv" }
+];
+let currentRadioIndex = 0;
+let radioPlaying = false;
+
+function loadRadioTrack(index) {
+  currentRadioIndex = index;
+  const track = radioStreams[currentRadioIndex];
+  realAudio.src = track.url;
+  trackNameDisplay.innerText = track.name;
+}
+
+function toggleRadio() {
+  radioPlaying = !radioPlaying;
+  if (radioPlaying) {
+    radioBtn.classList.add('active');
+    if (!realAudio.src) loadRadioTrack(0);
+    trackNameDisplay.innerText = "⏳ Connecting Radio...";
+    realAudio.play().then(() => {
+      trackNameDisplay.innerText = radioStreams[currentRadioIndex].name;
+    }).catch(e => {
+      trackNameDisplay.innerText = "⚠️ Tap Next ⏭️ to switch radio!";
+    });
+  } else {
+    radioBtn.classList.remove('active');
+    realAudio.pause();
+    trackNameDisplay.innerText = "📻 Radio Paused";
+  }
+}
+
+function nextRadioTrack() {
+  currentRadioIndex = (currentRadioIndex + 1) % radioStreams.length;
+  loadRadioTrack(currentRadioIndex);
+  if (radioPlaying) {
+    trackNameDisplay.innerText = "⏳ Connecting Radio...";
+    realAudio.play().then(() => {
+      trackNameDisplay.innerText = radioStreams[currentRadioIndex].name;
+    }).catch(e => {
+      trackNameDisplay.innerText = "⚠️ Buffering, tap Next again";
+    });
+  }
+}
+
+function handleCustomAudio(event) {
+  const file = event.target.files[0];
+  if (file) {
+    const objectUrl = URL.createObjectURL(file);
+    realAudio.src = objectUrl;
+    trackNameDisplay.innerText = `🎵 Local MP3: ${file.name}`;
+    radioPlaying = true;
+    radioBtn.classList.add('active');
+    realAudio.play();
+  }
+}
+
+loadRadioTrack(0);
+
+let audioCtx = null;
+let engineOsc = null;
+let engineGain = null;
+let engineFilter = null;
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+}
+
+function startEngineSound() {
+  initAudio();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  if (engineOsc) return;
+
+  engineOsc = audioCtx.createOscillator();
+  let subOsc = audioCtx.createOscillator();
+  
+  engineFilter = audioCtx.createBiquadFilter();
+  engineGain = audioCtx.createGain();
+
+  engineOsc.type = 'sawtooth';
+  subOsc.type = 'square';
+
+  engineFilter.type = 'lowpass';
+  engineFilter.frequency.setValueAtTime(150, audioCtx.currentTime);
+  engineGain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+
+  engineOsc.connect(engineFilter);
+  subOsc.connect(engineFilter);
+  engineFilter.connect(engineGain);
+  engineGain.connect(audioCtx.destination);
+
+  engineOsc.start();
+  subOsc.start();
+}
+
+function updateEngineSound(speed) {
+  if (!engineOsc || !audioCtx) return;
+  let baseRPM = 40 + (currentGear * 12);
+  let maxCap = is5GMode ? 122880 : 12000;
+  let speedPitch = (speed / maxCap) * 120;
+  let targetFreq = baseRPM + speedPitch;
+  if (nitroActive) targetFreq *= 1.4;
+
+  engineOsc.frequency.setTargetAtTime(targetFreq, audioCtx.currentTime, 0.05);
+  engineFilter.frequency.setTargetAtTime(targetFreq * 2.2, audioCtx.currentTime, 0.05);
+}
+
+function stopEngineSound() {
+  if (engineOsc) {
+    try { engineGain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.1); } catch(e){}
+    setTimeout(() => {
+      try { engineOsc.stop(); engineOsc.disconnect(); } catch(e){}
+      engineOsc = null;
+    }, 100);
+  }
+}
+
+function playBackfireSound() {
+  initAudio();
+  if (!audioCtx) return;
+  let pop = audioCtx.createOscillator();
+  let popGain = audioCtx.createGain();
+  pop.type = 'square';
+  pop.frequency.setValueAtTime(180, audioCtx.currentTime);
+  pop.frequency.exponentialRampToValueAtTime(20, audioCtx.currentTime + 0.15);
+  popGain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+  popGain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.15);
+  pop.connect(popGain);
+  popGain.connect(audioCtx.destination);
+  pop.start();
+  pop.stop(audioCtx.currentTime + 0.15);
+}
+
+function changeGear(val) {
+  currentGear = Math.min(Math.max(currentGear + val, 1), 6);
+  document.getElementById('gearNum').innerText = `GEAR: ${currentGear}`;
+  playBackfireSound();
+}
+
+function triggerMalayalamSpeech(text) {
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    let utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1.0;
+    utterance.pitch = 1.1;
+    utterance.lang = 'ml-IN'; 
+    window.speechSynthesis.speak(utterance);
+  }
+}
+
+let currentTheme = 0;
+const themes = [
+  { primary: '#00f0ff', secondary: '#ff007f', dialBg: '#050505', needle: '#ffffff' }, 
+  { primary: '#00ff66', secondary: '#ff3333', dialBg: '#000000', needle: '#ff2222' }, 
+  { primary: '#ffaa00', secondary: '#00e5ff', dialBg: '#0a0905', needle: '#ffff00' }   
+];
+
+function applyTheme() {
+  const t = themes[currentTheme];
+  document.body.style.color = t.primary;
+  gaugeFrame.style.borderColor = t.primary;
+  gaugeFrame.style.boxShadow = `0 0 15px ${t.primary}`;
+  document.getElementById('odometer').style.borderColor = t.secondary;
+  document.getElementById('speedVal').style.color = t.primary;
+  document.getElementById('pipesVal').style.color = t.secondary;
+
+  if(!burning) {
+    burnBtn.style.background = t.secondary;
+    burnBtn.style.boxShadow = `0 0 15px ${t.secondary}`;
+  } else {
+    burnBtn.style.background = t.primary;
+    burnBtn.style.boxShadow = `0 0 20px ${t.primary}`;
+  }
+}
+
+function switchTheme() {
+  currentTheme = (currentTheme + 1) % themes.length;
+  applyTheme();
+}
+
+function resetData() {
+  if (confirm("മുഴുവൻ ഡാറ്റാ ഹിസ്റ്ററിയും റീസെറ്റ് ചെയ്യണമെന്നുറപ്പാണോ?")) {
+    totalWasted = 0.0; maxSpeed4G = 0.0; maxSpeed5G = 0.0; peakSession = 0.0; currentSessionWasted = 0;
+    localStorage.setItem('cb_total_wasted', '0.0');
+    localStorage.setItem('cb_max_speed_4g', '0.0');
+    localStorage.setItem('cb_max_speed_5g', '0.0');
+    localStorage.removeItem('cb_max_speed');
+    localStorage.setItem('cb_peak_session', '0.0');
+    updateOdometer(totalWasted);
+    updateBadge();
+    updateHistoryUI();
+  }
+}
+
+function updateHistoryUI() {
+  document.getElementById('currentSessionVal').innerText = `${currentSessionWasted.toFixed(1)} MiB`;
+  document.getElementById('maxSpeedVal4G').innerText = `${maxSpeed4G.toFixed(2)} KBps`;
+  document.getElementById('maxSpeedVal5G').innerText = `${maxSpeed5G.toFixed(2)} MB/s`;
+  document.getElementById('peakSessionVal').innerText = `${peakSession.toFixed(1)} MiB`;
+}
+
+function updateBadge() {
+  const badgeEl = document.getElementById('badgeVal');
+  const levelNumEl = document.getElementById('rankLevelNum');
+  const progressFill = document.getElementById('rankProgressFill');
+  const progressText = document.getElementById('rankProgressText');
+
+  let totalMiB = totalWasted;
+  let rankName = "", levelStr = "", currentTierMin = 0, currentTierMax = 100;
+
+  if (totalMiB >= 10240) {
+    rankName = "👑 Jio Tower Destroyer"; levelStr = "Lv. Max 🚀";
+    currentTierMin = 10240; currentTierMax = 10240;
+  } else if (totalMiB >= 5120) {
+    rankName = "🔥 Ambani’s Best Friend"; levelStr = "Lv. 4";
+    currentTierMin = 5120; currentTierMax = 10240;
+  } else if (totalMiB >= 1024) {
+    rankName = "🚀 CT 100 Speed Demon"; levelStr = "Lv. 3";
+    currentTierMin = 1024; currentTierMax = 5120;
+  } else if (totalMiB >= 100) {
+    rankName = "⚡ Data Burner Rookie"; levelStr = "Lv. 2";
+    currentTierMin = 100; currentTierMax = 1024;
+  } else {
+    rankName = "🌱 Novice Net-Saver"; levelStr = "Lv. 1";
+    currentTierMin = 0; currentTierMax = 100;
+  }
+
+  badgeEl.innerText = rankName;
+  levelNumEl.innerText = levelStr;
+
+  let percent = 100;
+  if (currentTierMax > currentTierMin) {
+    percent = Math.min(Math.max(((totalMiB - currentTierMin) / (currentTierMax - currentTierMin)) * 100, 0), 100);
+  }
+  progressFill.style.width = `${percent}%`;
+  progressText.innerText = `${totalMiB.toFixed(1)} MiB / ${currentTierMax} MiB`;
+
+  if (totalWasted >= 5 && !nitroBtn.classList.contains('available')) {
+    nitroBtn.classList.add('available');
+  }
+}
+
+function createOdometer(container) {
+  container.innerHTML = ''; spans = [];
+  for (let i = 0; i < 6; i++) {
+    const digit = document.createElement('div');
+    digit.className = (i === 5) ? 'digit tenths' : 'digit';
+    const span = document.createElement('span');
+    let nums = '';
+    for(let j = 0; j <= 10; j++) nums += (j % 10) + '<br>';
+    span.innerHTML = nums; span.style.top = '0px';
+    digit.appendChild(span); container.appendChild(digit);
+    spans.push(span);
+  }
+}
+
+function updateOdometer(val) {
+  let tenths = val * 10;
+  let floorTenths = Math.floor(tenths);
+  let d5 = floorTenths % 10;
+  let d4 = Math.floor(floorTenths / 10) % 10;
+  let d3 = Math.floor(floorTenths / 100) % 10;
+  let d2 = Math.floor(floorTenths / 1000) % 10;
+  let d1 = Math.floor(floorTenths / 10000) % 10;
+  let d0 = Math.floor(floorTenths / 100000) % 10;
+  
+  let currentDigits = [d0, d1, d2, d3, d4, d5];
+  let fraction = tenths - floorTenths;
+  let rollProgress = new Array(6).fill(0);
+  rollProgress[5] = fraction;
+
+  for (let i = 0; i < spans.length; i++) {
+    let finalOffset = -(currentDigits[i] + rollProgress[i]) * digitHeight;
+    spans[i].style.top = `${finalOffset}px`;
+  }
+}
+
+function triggerLightningFlash() {
+  document.body.classList.add('lightning-flash');
+  setTimeout(() => document.body.classList.remove('lightning-flash'), 100);
+}
+
+function drawSpeedometer() {
+    const theme = themes[currentTheme];
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    ctx.fillStyle = theme.dialBg;
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, radius, 0, Math.PI*2);
+    ctx.fill();
+
+    const maxScaleVal = is5GMode ? 120 : 6000;
+    const stepVal = is5GMode ? 10 : 500;
+    const majorStep = is5GMode ? 20 : 1000;
+    const redlineLimit = is5GMode ? 96 : 4800;
+
+    for(let i = 0; i <= maxScaleVal; i += stepVal){
+      let angle = Math.PI * 0.85 + (i / maxScaleVal) * (Math.PI * 1.3);
+      let isMajor = (i % majorStep === 0);
+      let tickLength = isMajor ? 14 : 6;
+      
+      let x1 = centerX + Math.cos(angle) * (radius - tickLength);
+      let y1 = centerY + Math.sin(angle) * (radius - tickLength);
+      let x2 = centerX + Math.cos(angle) * radius;
+      let y2 = centerY + Math.sin(angle) * radius;
+      
+      ctx.beginPath();
+      ctx.moveTo(x1, y1); ctx.lineTo(x2, y2);
+      ctx.lineWidth = isMajor ? 3 : 1.5;
+      ctx.strokeStyle = (i >= redlineLimit) ? '#ff0000' : (isMajor ? theme.primary : theme.secondary);
+      ctx.stroke();
+
+      if(isMajor){
+        let tx = centerX + Math.cos(angle) * (radius - 26);
+        let ty = centerY + Math.sin(angle) * (radius - 26) + 4;
+        ctx.font = "bold 9px 'Courier New'";
+        ctx.fillStyle = (i >= redlineLimit) ? '#ff0000' : theme.primary;
+        ctx.textAlign = "center";
+        ctx.fillText(i, tx, ty);
+      }
+    }
+
+    let valToDraw = is5GMode ? (liveSpeed / 1024) : liveSpeed;
+    displaySpeed += (valToDraw - displaySpeed) * 0.05;
+    let needleAngle = Math.PI * 0.85 + (Math.min(displaySpeed, maxScaleVal) / maxScaleVal) * (Math.PI * 1.3);
+    
+    ctx.beginPath();
+    ctx.moveTo(centerX, centerY);
+    ctx.lineTo(centerX + Math.cos(needleAngle) * (radius - 22),
+               centerY + Math.sin(needleAngle) * (radius - 22));
+    ctx.lineWidth = 4;
+    ctx.strokeStyle = nitroActive ? '#ff2200' : theme.needle;
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(centerX, centerY, 8, 0, Math.PI*2);
+    ctx.fillStyle = nitroActive ? '#ff2200' : theme.primary;
+    ctx.fill();
+
+    requestAnimationFrame(drawSpeedometer);
+}
+
+const chunkSizeMiB = 102400 / (1024 * 1024); 
+const targetUrl = 'https://speed.cloudflare.com/__down?bytes=102400';
+let activeThreads = 0;
+let bytesDownloadedInInterval = 0;
+
+async function firePipe() {
+  if (!burning) return;
+
+  if (targetMbLimit !== null && targetMbLimit > 0 && currentSessionWasted >= targetMbLimit) {
+    burning = false;
+    nitroActive = false;
+    nitroBtn.classList.remove('active');
+    burnBtn.innerText = "START BLAST 🚀";
+    burnBtn.classList.remove('active');
+    applyTheme();
+    stopEngineSound();
+    triggerMalayalamSpeech(`ആഹാ, സെറ്റ് ചെയ്ത ${targetMbLimit} കിലോമീറ്റർ യാത്ര വിജയകരമായി പൂർത്തിയായിരിക്കുന്നു!`);
+    alert(`🎯 Target Reached! Completed exact ${targetMbLimit} MB / KMs!`);
+    abortControllers.forEach(c => c.abort());
+    abortControllers = [];
+    document.getElementById('pipesVal').innerText = `0 / 24`;
+    return;
+  }
+
+  activeThreads++;
+  let gearPipesCap = 16 + (currentGear * 1); 
+  let maxPipes = nitroActive ? 24 : gearPipesCap;
+  document.getElementById('pipesVal').innerText = `${activeThreads} / 24`;
+  
+  const controller = new AbortController();
+  abortControllers.push(controller);
+  
+  try {
+    const response = await fetch(`${targetUrl}&nocache=${Math.random()}`, { signal: controller.signal });
+    if (response.ok && burning) {
+      const blob = await response.blob();
+      const receivedBytes = blob.size;
+      
+      totalWasted += chunkSizeMiB;
+      currentSessionWasted += chunkSizeMiB;
+      bytesDownloadedInInterval += receivedBytes; 
+      
+      localStorage.setItem('cb_total_wasted', totalWasted.toFixed(4));
+      if (currentSessionWasted > peakSession) {
+        peakSession = currentSessionWasted;
+        localStorage.setItem('cb_peak_session', peakSession.toFixed(4));
+      }
+
+      updateOdometer(totalWasted);
+      updateBadge();
+      updateHistoryUI();
+    }
+  } catch (e) {} finally {
+    activeThreads--;
+    document.getElementById('pipesVal').innerText = `${activeThreads} / 24`;
+    abortControllers = abortControllers.filter(c => c !== controller);
+    if (burning) firePipe();
+  }
+}
+
+setInterval(() => {
+  if (burning) {
+    let bytesPerSec = bytesDownloadedInInterval / 0.3;
+    bytesDownloadedInInterval = 0;
+    let rawKBps = bytesPerSec / 1024; 
+    
+    rawKBps *= (0.8 + currentGear * 0.05); 
+    if (nitroActive) rawKBps *= 1.3; 
+    
+    smoothedKBps = (smoothedKBps === 0) ? rawKBps : (smoothedKBps * 0.7) + (rawKBps * 0.3);
+    liveSpeed = smoothedKBps;
+    
+    if (is5GMode) {
+      let speedMBps = liveSpeed / 1024;
+      if (speedMBps > maxSpeed5G) {
+        maxSpeed5G = speedMBps;
+        localStorage.setItem('cb_max_speed_5g', maxSpeed5G.toFixed(2));
+      }
+      document.getElementById('speedVal').innerText = `${speedMBps.toFixed(2)} MB/s`;
+    } else {
+      if (liveSpeed > maxSpeed4G) {
+        maxSpeed4G = liveSpeed;
+        localStorage.setItem('cb_max_speed_4g', maxSpeed4G.toFixed(2));
+      }
+      document.getElementById('speedVal').innerText = `${liveSpeed.toFixed(2)} KBps`;
+    }
+
+    updateHistoryUI();
+    updateEngineSound(liveSpeed);
+
+    if (nitroActive && Math.random() > 0.6) triggerLightningFlash();
+
+    let heatLimit = is5GMode ? 92160 : 4500;
+    if (liveSpeed >= heatLimit) {
+      gaugeFrame.classList.add('overheat');
+      overheatBanner.style.display = 'block';
+    } else {
+      gaugeFrame.classList.remove('overheat');
+      overheatBanner.style.display = 'none';
+    }
+
+    let policeLimit = is5GMode ? 102400 : 5000;
+    if (currentSessionWasted >= 100 || liveSpeed >= policeLimit) {
+      policeAlert.style.display = 'block';
+    } else {
+      policeAlert.style.display = 'none';
+    }
+
+    if (nitroActive || liveSpeed >= heatLimit) {
+      ambaniImg.classList.add('rage');
+      ambaniQuote.innerText = '"എന്റെ ടവർ കത്തിക്കുമോടാ സാമീ!? Stop it!!" 😡🔥';
+      ambaniQuote.style.color = '#ff0000';
+    } else {
+      ambaniImg.classList.remove('rage');
+      ambaniQuote.innerText = '"എന്തട നിനക്ക് നെറ്റ് അത്രക്ക് അധികമാണോ?" 🤨🔥';
+      ambaniQuote.style.color = '#ff007f';
+    }
+
+  } else {
+    smoothedKBps = 0; liveSpeed = 0;
+    document.getElementById('speedVal').innerText = is5GMode ? `0.00 MB/s` : `0.00 KBps`;
+    gaugeFrame.classList.remove('overheat');
+    overheatBanner.style.display = 'none';
+    policeAlert.style.display = 'none';
+    ambaniImg.classList.remove('rage');
+    ambaniQuote.innerText = '"എന്തട നിനക്ക് നെറ്റ് തീർക്കണോ?" 😌🔥';
+    ambaniQuote.style.color = '#ff007f';
+    stopEngineSound();
+  }
+}, 300);
+
+burnBtn.addEventListener('click', function() {
+  if (!burning) {
+    burning = true;
+    currentSessionWasted = 0;
+    this.innerText = "STOP BLAST 🛑";
+    this.classList.add('active');
+    applyTheme();
+    startEngineSound();
+    triggerMalayalamSpeech("അടിയെടാ പൊട്ടാ കേറിപ്പോവട്ടെ!");
+    let threadTarget = nitroActive ? 24 : (16 + currentGear);
+    for (let i = 0; i < threadTarget; i++) setTimeout(firePipe, i * 15);
+  } else {
+    burning = false;
+    nitroActive = false;
+    nitroBtn.classList.remove('active');
+    this.innerText = "START BLAST 🚀";
+    this.classList.remove('active');
+    applyTheme();
+    stopEngineSound();
+    triggerMalayalamSpeech("തീർന്നു... ആ അധ്യായം അവിടെ തീർന്നു!");
+    abortControllers.forEach(c => c.abort());
+    abortControllers = [];
+    document.getElementById('pipesVal').innerText = `0 / 24`;
+  }
+});
+
+nitroBtn.addEventListener('click', function() {
+  if (!this.classList.contains('available') && !nitroActive) return;
+  nitroActive = !nitroActive;
+  if (nitroActive) {
+    this.classList.add('active');
+    this.innerText = "NITRO ON 🔥";
+    playBackfireSound();
+    triggerLightningFlash();
+    if (burning) {
+      for (let i = 0; i < 8; i++) setTimeout(firePipe, i * 10);
+    }
+  } else {
+    this.classList.remove('active');
+    this.innerText = "NITRO ⚡";
+  }
+});
+
+createOdometer(odoContainer);
+updateOdometer(totalWasted);
+updateBadge();
+updateHistoryUI();
+applyTheme();
+drawSpeedometer();
+</script>
+</body>
+</html>
     overflow: hidden;
   }
   .gauge-box {
