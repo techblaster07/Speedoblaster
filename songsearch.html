@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en-US" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MP3Juice - Free MP3 Juice Downloader | Convert MP3 Downloads</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <link rel="shortcut icon" href="/favicon.png">
+  
+  <!-- Tailwind CSS & Alpine.js CDN for functionality -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <meta name="description" content="Mp3juice is a reliable mp3 downloader that offers high-quality music downloads in high quality audio up to 320kbps. No registration or ads required.">
+</head>
+<body class="text-sm bg-sky-700 text-white min-h-screen">
+  <div class="max-w-2xl mx-auto px-4">
+    
+    <!-- Header Section -->
+    <header>
+      <div class="flex items-center justify-center border-b border-sky-800 gap-x-4">
+        <ul class="flex overflow-auto text-center md:overflow-visible gap-x-4">
+          <li><a class="block py-2.5 whitespace-nowrap hover:text-sky-200" href="#">HOME</a></li>
+          <li><a class="block py-2.5 whitespace-nowrap hover:text-sky-200" href="#">Contact</a></li>
+          <li><a class="block py-2.5 whitespace-nowrap hover:text-sky-200" href="#">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div class="flex justify-center py-8">
+        <a href="#" class="text-2xl font-black tracking-wider">MP3JUICE</a>
+      </div>
+    </header>
+
+    <!-- Main Search & Results Component -->
+    <main x-data="mp3Search()">
+      <div class="mb-8">
+        <!-- Search Form -->
+        <form class="flex p-3 rounded-lg gap-x-3 bg-sky-800 shadow-lg relative" @submit.prevent="performSearch()">
+          <div class="relative flex-1">
+            <input 
+              class="w-full bg-white py-3.5 px-5 outline-0 text-gray-800 rounded-md" 
+              type="search" 
+              placeholder="Enter keyword, song name, or link" 
+              x-model="query"
+              @input="fetchSuggestions()"
+            >
+            
+            <!-- Dynamic Suggestion Dropdown -->
+            <ul class="absolute left-0 right-0 bg-white text-gray-800 shadow-xl rounded-b-md mt-1 z-50 overflow-hidden" x-show="showSuggestions && suggestions.length > 0" x-cloak>
+              <template x-for="item in suggestions">
+                <li class="px-4 py-2 hover:bg-sky-100 cursor-pointer" @click="selectSuggestion(item)" x-text="item"></li>
+              </template>
+            </ul>
+          </div>
+
+          <button class="relative cursor-pointer py-3.5 px-6 bg-sky-500 hover:bg-sky-400 font-semibold rounded-md transition-colors" type="submit">
+            <span x-show="!loading">Start</span>
+            <!-- Loading Spinner -->
+            <span x-show="loading" x-cloak>
+              <svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </span>
+          </button>
+        </form>
+
+        <div class="mt-3.5 text-xs text-white/60 text-center">
+          <p>By using our service you accept our <a href="#" class="underline">Terms of Service</a></p>
+        </div>
+      </div>
+
+      <!-- Search Results Box (Dynamic Area with Play & Download) -->
+      <div class="bg-sky-800/60 p-4 rounded-lg shadow-md mb-8" x-show="hasSearched" x-cloak>
+        <h3 class="font-bold text-base mb-3 border-b border-sky-700 pb-2">Search Results for: <span class="text-sky-300" x-text="query"></span></h3>
+        
+        <div class="space-y-3">
+          <!-- Result Item 1 -->
+          <div class="bg-sky-900/80 p-3 rounded-md">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="font-semibold" x-text="query + ' - Official Audio'"></p>
+                <span class="text-xs text-sky-300">Duration: 3:45 | 320kbps</span>
+              </div>
+              <div class="flex gap-2">
+                <button @click="togglePlay(1)" class="bg-sky-600 hover:bg-sky-500 text-xs px-3 py-2 rounded font-medium transition flex items-center gap-1 cursor-pointer">
+                  <span x-text="playingId === 1 ? '⏸ Pause' : '▶ Play'"></span>
+                </button>
+                <button @click="alert('Downloading MP3...')" class="bg-green-600 hover:bg-green-500 text-xs px-3 py-2 rounded font-medium transition cursor-pointer">Download</button>
+              </div>
+            </div>
+            <!-- Audio player preview container (hidden by default) -->
+            <div class="mt-3 pt-2 border-t border-sky-800" x-show="playingId === 1" x-cloak>
+              <audio controls class="w-full h-8" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3"></audio>
+            </div>
+          </div>
+          
+          <!-- Result Item 2 -->
+          <div class="bg-sky-900/80 p-3 rounded-md">
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="font-semibold" x-text="query + ' (Remix Version)'"></p>
+                <span class="text-xs text-sky-300">Duration: 4:12 | 320kbps</span>
+              </div>
+              <div class="flex gap-2">
+                <button @click="togglePlay(2)" class="bg-sky-600 hover:bg-sky-500 text-xs px-3 py-2 rounded font-medium transition flex items-center gap-1 cursor-pointer">
+                  <span x-text="playingId === 2 ? '⏸ Pause' : '▶ Play'"></span>
+                </button>
+                <button @click="alert('Downloading MP3...')" class="bg-green-600 hover:bg-green-500 text-xs px-3 py-2 rounded font-medium transition cursor-pointer">Download</button>
+              </div>
+            </div>
+            <!-- Audio player preview container (hidden by default) -->
+            <div class="mt-3 pt-2 border-t border-sky-800" x-show="playingId === 2" x-cloak>
+              <audio controls class="w-full h-8" src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3"></audio>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Informational Content Section -->
+      <div class="content space-y-4 text-sky-100/90 leading-relaxed">
+        <h1 class="text-xl font-bold text-white">MP3Juices - MP3 Juice Free Music Downloads</h1>
+        <p><strong>MP3Juice</strong> is a popular online platform that allows users to search for, stream, and download MP3 music files seamlessly. Input the name of a song or artist into the search bar above to generate live search options, stream tracks using the play button, or download audio files instantly.</p>
+      </div>
+    </main>
+
+    <!-- Footer -->
+    <ul class="flex justify-center flex-wrap mt-8 gap-x-4 py-4 border-t border-sky-800 text-xs">
+      <li><a class="block py-1 hover:text-sky-200" href="#">DMCA</a></li>
+      <li><a class="block py-1 hover:text-sky-200" href="#">Disclaimer</a></li>
+      <li><a class="block py-1 hover:text-sky-200" href="#">Terms of Service</a></li>
+      <li><a class="block py-1 hover:text-sky-200" href="#">Privacy Policy</a></li>
+      <li><a class="block py-1 hover:text-sky-200" href="#">Contact</a></li>
+    </ul>
+  </div>
+
+  <!-- Script logic for interactive search handling -->
+  <script>
+    function mp3Search() {
+      return {
+        query: '',
+        loading: false,
+        hasSearched: false,
+        suggestions: [],
+        showSuggestions: false,
+        playingId: null,
+        
+        fetchSuggestions() {
+          if (this.query.length > 2) {
+            this.suggestions = [
+              this.query + ' remix',
+              this.query + ' official audio',
+              this.query + ' live performance',
+              this.query + ' bass boosted'
+            ];
+            this.showSuggestions = true;
+          } else {
+            this.suggestions = [];
+            this.showSuggestions = false;
+          }
+        },
+
+        selectSuggestion(item) {
+          this.query = item;
+          this.showSuggestions = false;
+          this.performSearch();
+        },
+
+        performSearch() {
+          if (!this.query.trim()) return;
+          this.loading = true;
+          this.showSuggestions = false;
+          this.playingId = null;
+          
+          setTimeout(() => {
+            this.loading = false;
+            this.hasSearched = true;
+          }, 600);
+        },
+
+        togglePlay(id) {
+          if (this.playingId === id) {
+            this.playingId = null; // Pause/Close player
+          } else {
+            this.playingId = id; // Open player for this song
+          }
+        }
+      }
+    }
+  </script>
+</body>
+</html>
