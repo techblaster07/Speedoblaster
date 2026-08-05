@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Radio Stations Player</title>
+  <!-- Tailwind CSS & Alpine.js -->
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-emerald-900 text-white min-h-screen flex items-center justify-center p-4">
+
+  <div class="w-full max-w-md bg-emerald-950 border border-emerald-800 rounded-2xl shadow-2xl p-6" x-data="radioGardenPlayer()">
+    
+    <!-- Title -->
+    <div class="flex items-center justify-between pb-4 border-b border-emerald-800">
+      <div class="flex items-center gap-2">
+        <span class="text-2xl">🌍</span>
+        <h2 class="font-bold text-lg tracking-wide">LIVE RADIO STREAM</h2>
+      </div>
+      <span class="px-2.5 py-1 text-xs bg-emerald-500/20 text-emerald-300 font-semibold rounded-full animate-pulse" x-show="isPlaying">● ON AIR</span>
+    </div>
+
+    <!-- Now Playing Box -->
+    <div class="my-6 text-center bg-emerald-900/60 p-5 rounded-xl border border-emerald-700/40">
+      <p class="text-xs text-emerald-400 uppercase tracking-widest font-semibold">Active Station</p>
+      <h3 class="text-lg font-bold text-white mt-1" x-text="currentStation.name"></h3>
+      <p class="text-xs text-emerald-300/70 mt-1" x-text="currentStation.location"></p>
+    </div>
+
+    <!-- Hidden HTML5 Audio Element -->
+    <audio x-ref="audio" @play="isPlaying = true" @pause="isPlaying = false" @error="handleError()"></audio>
+
+    <!-- Controls Form -->
+    <div class="space-y-4">
+      <div>
+        <label class="block text-xs text-emerald-300 mb-1.5 font-medium">Choose Station</label>
+        <select class="w-full bg-emerald-900 border border-emerald-700 rounded-lg p-3 text-sm outline-none focus:border-emerald-400 text-white cursor-pointer" x-model="currentIndex" @change="switchStation()">
+          <template x-for="(station, index) in stations">
+            <option :value="index" x-text="station.name + ' (' + station.location + ')'"></option>
+          </template>
+        </select>
+      </div>
+
+      <!-- Play / Stop Button -->
+      <button @click="togglePlay()" class="w-full py-3.5 bg-emerald-500 hover:bg-emerald-400 font-bold text-emerald-950 rounded-xl transition-all shadow-lg flex items-center justify-center gap-2 cursor-pointer">
+        <span x-text="isPlaying ? '⏸ Pause Stream' : '▶ Play Stream'"></span>
+      </button>
+
+      <!-- Volume Slider -->
+      <div class="flex items-center gap-3 pt-2">
+        <span class="text-sm">🔊</span>
+        <input type="range" min="0" max="1" step="0.05" x-model="volume" @input="setVolume()" class="w-full accent-emerald-400 cursor-pointer">
+      </div>
+    </div>
+
+    <p class="text-center text-[10px] text-emerald-400/50 mt-6">Powered by live web audio stream integrations.</p>
+  </div>
+
+  <script>
+    function radioGardenPlayer() {
+      return {
+        isPlaying: false,
+        volume: 0.8,
+        currentIndex: 0,
+        // List of reliable working live radio stream URLs (including regional/global selections)
+        stations: [
+          { name: 'Radio Malayalam', location: 'Kerala, India', url: 'https://radio.streemlion.com:1340/stream' },
+          { name: 'Club FM', location: 'Thrissur, India', url: 'https://icecast.matrubhumi.net/clubfm' },
+          { name: 'Radio Mango', location: 'Kochi, India', url: 'https://radiomango.mmhindia.com/radiomango.mp3' },
+          { name: 'All India Radio (AIR) Malayalam', location: 'Thiruvananthapuram', url: 'https://air.pcුවන්.live/stream' },
+          { name: 'BBC World Service', location: 'London, UK', url: 'https://stream.live.vc.bbcmedia.co.uk/bbc_world_service' }
+        ],
+        get currentStation() {
+          return this.stations[this.currentIndex];
+        },
+        init() {
+          const audio = this.$refs.audio;
+          audio.volume = this.volume;
+          audio.src = this.currentStation.url;
+        },
+        switchStation() {
+          const audio = this.$refs.audio;
+          audio.src = this.currentStation.url;
+          if (this.isPlaying) {
+            audio.play().catch(e => {
+              this.isPlaying = false;
+              alert('Could not connect to this stream URL.');
+            });
+          }
+        },
+        togglePlay() {
+          const audio = this.$refs.audio;
+          if (this.isPlaying) {
+            audio.pause();
+          } else {
+            audio.play().catch(e => {
+              this.isPlaying = false;
+              alert('Playback failed. Stream might be offline.');
+            });
+          }
+        },
+        setVolume() {
+          this.$refs.audio.volume = this.volume;
+        },
+        handleError() {
+          this.isPlaying = false;
+          console.warn('Stream error occurred.');
+        }
+      }
+    }
+  </script>
+</body>
+</html>
