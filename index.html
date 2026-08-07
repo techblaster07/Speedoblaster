@@ -3,7 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Cyber-Blaster Dash v25.0 - Custom Layout Edition 🚀🎸</title>
+<title>Cyber-Blaster Dash v26.6 - Real Blasters Only 🔥📻</title>
+<!-- Tailwind CSS for styling -->
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <style>
   body {
     background: #0d0d0d;
@@ -22,7 +24,7 @@
   }
   h2 {
     text-shadow: 0 0 10px #00f0ff;
-    margin-bottom: 5px;
+    margin-bottom: 2px;
     text-align: center;
   }
   .main-container {
@@ -326,11 +328,12 @@
   }
   .action-row {
     display: flex;
+    flex-wrap: wrap;
     gap: 6px;
     margin-bottom: 10px;
   }
-  .theme-btn, .reset-btn, .radio-btn, .next-bgm-btn, .upload-btn-label {
-    flex: 1;
+  .theme-btn, .reset-btn, .logout-btn, .radio-btn, .next-bgm-btn, .upload-btn-label {
+    flex: 1 1 auto;
     background: transparent;
     border: 1px solid #555;
     color: #aaa;
@@ -341,9 +344,11 @@
     font-family: 'Courier New', monospace;
     text-align: center;
   }
-  .theme-btn:hover, .reset-btn:hover, .radio-btn:hover, .next-bgm-btn:hover, .upload-btn-label:hover { color: #fff; border-color: #fff; }
+  .theme-btn:hover, .reset-btn:hover, .logout-btn:hover, .radio-btn:hover, .next-bgm-btn:hover, .upload-btn-label:hover { color: #fff; border-color: #fff; }
   .reset-btn { border-color: #ff3333; color: #ff5555; }
   .reset-btn:hover { background: #ff3333; color: #fff; }
+  .logout-btn { border-color: #ff9900; color: #ff9900; }
+  .logout-btn:hover { background: #ff9900; color: #000; }
   .radio-btn.active { border-color: #00f0ff; color: #00f0ff; box-shadow: 0 0 8px #00f0ff; }
   .next-bgm-btn { border-color: #ffaa00; color: #ffaa00; }
   .upload-btn-label { border-color: #00ff66; color: #00ff66; }
@@ -453,6 +458,39 @@
   }
   .history-card div { display: flex; justify-content: space-between; margin: 3px 0; }
 
+  /* REAL BLASTER LEADERBOARD CARD */
+  .leaderboard-card {
+    background: #080808;
+    border: 1px solid #00f0ff;
+    padding: 10px;
+    border-radius: 6px;
+    font-size: 11px;
+    text-align: left;
+    margin-bottom: 10px;
+    box-shadow: inset 0 0 10px rgba(0, 240, 255, 0.15);
+    width: 100%;
+    box-sizing: border-box;
+  }
+  .lb-header {
+    color: #00f0ff;
+    font-weight: bold;
+    border-bottom: 1px dashed #333;
+    padding-bottom: 4px;
+    margin-bottom: 6px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .lb-item {
+    display: flex;
+    justify-content: space-between;
+    margin: 4px 0;
+    color: #ccc;
+  }
+  .lb-item.highlight {
+    color: #ffaa00;
+    font-weight: bold;
+  }
+
   #policeAlert {
     display: none;
     position: absolute;
@@ -488,14 +526,19 @@
 </head>
 <body>
 
-<h2>CYBER-BLASTER DASH v25.0 🚀🚗</h2>
-<p style="margin-top:0; color:#666; font-size:11px;" id="editionText">Custom Top-Down Ordered Edition</p>
+<!-- DYNAMIC WELCOME BANNER -->
+<div id="dynamicWelcomeUser" style="font-size: 12px; color: #ff007f; font-weight: bold; margin-bottom: 5px; text-shadow: 0 0 8px rgba(255,0,127,0.4);">
+  ⚡ Welcome, Cyber Rider! 🔥
+</div>
+
+<h2>CYBER-BLASTER DASH v26.6 🚀📻</h2>
+<p style="margin-top:0; color:#666; font-size:11px;" id="editionText">Real Blasters Only Edition</p>
 
 <div class="main-container">
   <div id="policeAlert">🚨 POLICE ALERT: AMBANI CYBER CELL IS TRACKING YOUR HIGH DATA BLAST IP! 🚨</div>
   <div id="overheatBanner">⚠️ SYSTEM OVERHEAT WARNING! REDLINE SPEED! ⚠️</div>
 
-  <!-- 1. AMBANI TITLE, PHOTO & DIALOGUE AT THE TOP -->
+  <!-- 1. AMBANI TITLE, PHOTO & DIALOGUE -->
   <div class="ambani-container">
     <div class="ambani-title">ഞാൻ ഒരു മലരൻ 🌸😂</div>
     <div class="ambani-img-wrapper">
@@ -587,13 +630,34 @@
         <input type="file" id="audioFileInput" accept="audio/*" style="display:none;" onchange="handleCustomAudio(event)">
       </label>
       <button class="reset-btn" onclick="resetData()">Reset 🗑️</button>
+      <button class="logout-btn" onclick="logoutUser()">Logout 🚪</button>
     </div>
 
     <div class="track-display" id="trackNameDisplay">📻 Radio Station Offline</div>
 
+    <!-- ONLINE RADIO BOX HUB BUTTON -->
+    <div style="margin-bottom: 10px;">
+      <button onclick="toggleHubModal()" style="width: 100%; background: #002233; border: 1px solid #00f0ff; color: #00f0ff; padding: 10px; border-radius: 6px; font-weight: bold; font-family: 'Courier New', monospace; cursor: pointer; box-shadow: 0 0 10px rgba(0,240,255,0.2);">
+        റേഡിയോ നിലയത്തിലേക്ക് പോകാം🎧
+      </button>
+    </div>
+
+    <!-- REAL BLASTER LEADERBOARD -->
+    <div class="leaderboard-card">
+      <div class="lb-header">
+        <span>🏆 REAL BLASTER BOARD</span>
+        <span style="font-size: 9px; color: #ff007f;">ACTIVE ONLY</span>
+      </div>
+      <div id="realBlasterLeaderboardList">
+        <div class="lb-item"><span>1. Waiting for Blasts...</span><span>0.0 MiB</span></div>
+      </div>
+    </div>
+
+    <!-- DYNAMIC HALL OF FAME / LOG RECORDS -->
     <div class="history-card">
-      <div style="color: #ffaa00; font-weight: bold; border-bottom: 1px dashed #333; padding-bottom: 3px; margin-bottom: 5px;">
-        <span>🏆 LOG RECORDS</span>
+      <div style="color: #ffaa00; font-weight: bold; border-bottom: 1px dashed #333; padding-bottom: 3px; margin-bottom: 5px; display: flex; justify-content: space-between;">
+        <span>🎯 SESSION STATS</span>
+        <span id="riderProfileNameDisplay" style="color:#00f0ff; font-size:10px;">Rider: Pro</span>
       </div>
       <div><span>Current Travelling:</span> <strong id="currentSessionVal" style="color:#00ff66;">0.0 MiB</strong></div>
       <div><span>Max Speed 4G (KBps):</span> <strong id="maxSpeedVal4G" style="color:#00f0ff;">0.00 KBps</strong></div>
@@ -603,9 +667,82 @@
   </div>
 </div>
 
+<!-- ONLINE RADIO BOX MODAL -->
+<div id="radioHubModal" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999; padding: 20px; align-items: center; justify-content: center;">
+  <div style="background:#141414; border:2px solid #00f0ff; width:100%; max-width:450px; height:80vh; border-radius:12px; display:flex; flex-direction:column; box-shadow:0 0 25px rgba(0,240,255,0.4); overflow:hidden;">
+    <div style="display:flex; justify-content:space-between; align-items:center; padding:12px 15px; border-bottom:1px solid #333; background:#0c0c0c;">
+      <span style="font-weight:bold; color:#00f0ff; font-size:13px;">📻 Online Radio Box Hub</span>
+      <button onclick="toggleHubModal()" style="background:#ff007f; color:#fff; border:none; padding:4px 10px; border-radius:4px; font-weight:bold; cursor:pointer; font-size:11px;">✕ Close</button>
+    </div>
+    <div style="flex:1; position:relative; background:#000;">
+      <iframe src="https://onlineradiobox.com/in/malayalam/" style="width:100%; height:100%; border:none;" title="Online Radio Box"></iframe>
+    </div>
+  </div>
+</div>
+
 <audio id="realBgmPlayer" crossorigin="anonymous" loop></audio>
 
 <script>
+// --- STRICT OTP & STAY LOGGED IN LOGIC ---
+let storedRiderName = localStorage.getItem('cb_rider_name') || sessionStorage.getItem('cb_rider_name');
+let storedPhone = localStorage.getItem('cb_rider_phone') || sessionStorage.getItem('cb_rider_phone');
+let isLoggedIn = localStorage.getItem('cb_is_logged_in') || sessionStorage.getItem('cb_is_logged_in');
+
+if (!isLoggedIn || !storedRiderName || !storedPhone) {
+  let phone = prompt("📱 മച്ചാനേ, നിന്റെ മൊബൈൽ നമ്പർ നൽകുക (Exactly 10 Digits - Numbers only):");
+  
+  let phoneRegex = /^[0-9]{10}$/;
+  
+  if (phone && phoneRegex.test(phone.trim())) {
+    let generatedOtp = Math.floor(100000 + Math.random() * 900000);
+    alert(`⚡ [CYBER-BLASTER OTP DEMO]\n\nYour Verification Code is: ${generatedOtp}`);
+    
+    let userOtp = prompt("🔑 ഫോണിൽ വന്ന 6-Digit OTP ഇവിടെ നൽകുക:");
+    
+    if (userOtp && userOtp.trim() === generatedOtp.toString()) {
+      let name = prompt("✅ Verification Success! ഇനി നിന്റെ പേര് പറയൂ 🏍️🔥", "Cyber Rider");
+      storedRiderName = (name && name.trim() !== "") ? name.trim() : "Cyber Rider";
+      storedPhone = phone.trim();
+      
+      let stayLoggedIn = confirm("🔒 'Stay Logged In' ആയി തുടരണോ?\n\n[OK] -> സേവ് ആകും, അടുത്ത തവണ ഓട്ടോ-ലോഗിൻ ആകും.\n[Cancel] -> ഈ സെഷനിൽ മാത്രം ലോഗിൻ നിൽക്കും.");
+      
+      if (stayLoggedIn) {
+        localStorage.setItem('cb_rider_name', storedRiderName);
+        localStorage.setItem('cb_rider_phone', storedPhone);
+        localStorage.setItem('cb_is_logged_in', 'true');
+        alert("🚀 Saved! You will stay logged in permanently.");
+      } else {
+        sessionStorage.setItem('cb_rider_name', storedRiderName);
+        sessionStorage.setItem('cb_rider_phone', storedPhone);
+        sessionStorage.setItem('cb_is_logged_in', 'true');
+        alert("🚀 Logged in for this session only!");
+      }
+    } else {
+      alert("❌ തെറ്റായ OTP! ഡിഫോൾട്ട് ഗസ്റ്റ് റൈഡറായി തുടരുന്നു.");
+      storedRiderName = "Guest Rider";
+    }
+  } else {
+    alert("❌ തെറ്റായ നമ്പർ! അക്ഷരങ്ങളോ 10 അക്കത്തിൽ കൂടുതലോ കുറവോ ഉള്ള എണ്ണം പാടില്ല. (Numbers Only, Exactly 10 Digits required)");
+    storedRiderName = "Guest Rider";
+  }
+}
+
+document.getElementById('dynamicWelcomeUser').innerText = `⚡ Welcome, ${storedRiderName}! 🔥`;
+document.getElementById('riderProfileNameDisplay').innerText = `Rider: ${storedRiderName}`;
+
+function logoutUser() {
+  if (confirm("മച്ചാനെ, ലോഗൗട്ട് ചെയ്യണമെന്നു ഉറപ്പാണോ?")) {
+    localStorage.removeItem('cb_is_logged_in');
+    localStorage.removeItem('cb_rider_name');
+    localStorage.removeItem('cb_rider_phone');
+    sessionStorage.removeItem('cb_is_logged_in');
+    sessionStorage.removeItem('cb_rider_name');
+    sessionStorage.removeItem('cb_rider_phone');
+    alert("👋 Logged out successfully!");
+    location.reload();
+  }
+}
+
 const canvas = document.getElementById('speedo');
 const ctx = canvas.getContext('2d');
 const odoContainer = document.getElementById('odometer');
@@ -625,7 +762,7 @@ const centerY = canvas.height / 2;
 const radius = 135;
 
 let totalWasted = parseFloat(localStorage.getItem('cb_total_wasted')) || 0.0;
-let maxSpeed4G = parseFloat(localStorage.getItem('cb_max_speed_4g')) || parseFloat(localStorage.getItem('cb_max_speed')) || 0.0;
+let maxSpeed4G = parseFloat(localStorage.getItem('cb_max_speed_4g')) || 0.0;
 let maxSpeed5G = parseFloat(localStorage.getItem('cb_max_speed_5g')) || 0.0;
 let peakSession = parseFloat(localStorage.getItem('cb_peak_session')) || 0.0;
 
@@ -642,6 +779,67 @@ let spans = [];
 const digitHeight = 26;
 let abortControllers = [];
 
+// --- REAL BLASTER LEADERBOARD LOGIC ---
+const blastersChannel = new BroadcastChannel('cyber_blasters_channel');
+
+function getActiveBlasters() {
+  let blasters = JSON.parse(localStorage.getItem('cb_real_blasters_db')) || {};
+  return blasters;
+}
+
+function saveActiveBlaster(name, score) {
+  if (score <= 0) return;
+  let blasters = getActiveBlasters();
+  blasters[name] = { score: score, lastActive: Date.now() };
+  localStorage.setItem('cb_real_blasters_db', JSON.stringify(blasters));
+  
+  blastersChannel.postMessage({ name: name, score: score });
+}
+
+blastersChannel.onmessage = function (event) {
+  updateRealBlasterLeaderboardUI();
+};
+
+function updateRealBlasterLeaderboardUI() {
+  let blasters = getActiveBlasters();
+  
+  if (totalWasted > 0) {
+    blasters[storedRiderName] = { score: totalWasted, lastActive: Date.now() };
+  }
+
+  let blasterArray = [];
+  for (let name in blasters) {
+    blasterArray.push({ name: name, score: blasters[name].score });
+  }
+  blasterArray.sort((a, b) => b.score - a.score);
+
+  const container = document.getElementById('realBlasterLeaderboardList');
+  container.innerHTML = '';
+  
+  if (blasterArray.length === 0) {
+    container.innerHTML = `<div class="lb-item"><span>1. Waiting for Blasts...</span><span>0.0 MiB</span></div>`;
+    return;
+  }
+
+  for(let i = 0; i < Math.min(5, blasterArray.length); i++) {
+    let item = blasterArray[i];
+    let isMe = (item.name === storedRiderName);
+    let div = document.createElement('div');
+    div.className = isMe ? 'lb-item highlight' : 'lb-item';
+    div.innerHTML = `<span>${i+1}. ${item.name} ${isMe ? '⭐' : ''}</span><span>${item.score.toFixed(1)} MiB</span>`;
+    container.appendChild(div);
+  }
+}
+
+function toggleHubModal() {
+  const modal = document.getElementById('radioHubModal');
+  if (modal.style.display === 'none' || modal.style.display === '') {
+    modal.style.display = 'flex';
+  } else {
+    modal.style.display = 'none';
+  }
+}
+
 function toggle5GMode() {
   is5GMode = !is5GMode;
   const btn = document.getElementById('btn5G');
@@ -650,12 +848,12 @@ function toggle5GMode() {
   if (is5GMode) {
     btn.innerText = "5G: ON 🔥";
     btn.classList.add('active');
-    edText.innerText = "Ultra 5G Mode";
+    edText.innerText = "Ultra 5G Dynamic Mode";
     triggerMalayalamSpeech("അൾട്രാ ഫൈവ് ജി മോഡ് ആക്റ്റീവ് ആക്കിയിരിക്കുന്നു!");
   } else {
     btn.innerText = "5G: OFF";
     btn.classList.remove('active');
-    edText.innerText = "6000 KBps Normal Mode";
+    edText.innerText = "Real Blasters Only Edition";
     triggerMalayalamSpeech("ഫൈവ് ജി മോഡ് ഡിസാക്റ്റീവ് ആക്കി!");
   }
   updateHistoryUI();
@@ -901,16 +1099,25 @@ function switchTheme() {
 }
 
 function resetData() {
-  if (confirm("മുഴുവൻ ഡാറ്റാ ഹിസ്റ്ററിയും റീസെറ്റ് ചെയ്യണമെന്നുറപ്പാണോ?")) {
+  if (confirm("ഫുൾ ഡാറ്റാ ഹിസ്റ്ററിയും ഫോൺ അക്കൗണ്ടും ക്ലിയർ ചെയ്യണമെന്നുറപ്പാണോ?")) {
     totalWasted = 0.0; maxSpeed4G = 0.0; maxSpeed5G = 0.0; peakSession = 0.0; currentSessionWasted = 0;
     localStorage.setItem('cb_total_wasted', '0.0');
     localStorage.setItem('cb_max_speed_4g', '0.0');
     localStorage.setItem('cb_max_speed_5g', '0.0');
     localStorage.removeItem('cb_max_speed');
     localStorage.setItem('cb_peak_session', '0.0');
-    updateOdometer(totalWasted);
-    updateBadge();
-    updateHistoryUI();
+    
+    localStorage.removeItem('cb_is_logged_in');
+    localStorage.removeItem('cb_rider_name');
+    localStorage.removeItem('cb_rider_phone');
+    sessionStorage.clear();
+
+    let blasters = getActiveBlasters();
+    delete blasters[storedRiderName];
+    localStorage.setItem('cb_real_blasters_db', JSON.stringify(blasters));
+    blastersChannel.postMessage({ name: storedRiderName, score: 0 });
+
+    location.reload();
   }
 }
 
@@ -1105,6 +1312,8 @@ async function firePipe() {
       bytesDownloadedInInterval += receivedBytes; 
       
       localStorage.setItem('cb_total_wasted', totalWasted.toFixed(4));
+      saveActiveBlaster(storedRiderName, totalWasted);
+
       if (currentSessionWasted > peakSession) {
         peakSession = currentSessionWasted;
         localStorage.setItem('cb_peak_session', peakSession.toFixed(4));
@@ -1113,6 +1322,7 @@ async function firePipe() {
       updateOdometer(totalWasted);
       updateBadge();
       updateHistoryUI();
+      updateRealBlasterLeaderboardUI();
     }
   } catch (e) {} finally {
     activeThreads--;
@@ -1240,6 +1450,7 @@ createOdometer(odoContainer);
 updateOdometer(totalWasted);
 updateBadge();
 updateHistoryUI();
+updateRealBlasterLeaderboardUI();
 applyTheme();
 drawSpeedometer();
 </script>
